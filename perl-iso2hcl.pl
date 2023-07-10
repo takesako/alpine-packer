@@ -5,6 +5,8 @@ use LWP::Protocol::https;
 use LWP::UserAgent;
 use File::Slurp;
 
+$ENV{"PERL_LWP_SSL_VERIFY_HOSTNAME"} = 0;
+
 my $alpine_prefix = ["alpine-standard", "alpine-virt"];
 
 my $build_arch = { "x86_64" => 1, "aarch64" => 1 };

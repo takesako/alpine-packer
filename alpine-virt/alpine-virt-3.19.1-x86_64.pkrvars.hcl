@@ -1,0 +1,5 @@
+iso_url = "https://dl-cdn.alpinelinux.org/alpine/v3.19/releases/x86_64/alpine-virt-3.19.1-x86_64.iso"
+iso_checksum = "sha256:366317d854d77fc5db3b2fd774f5e1e5db0a7ac210614fd39ddb555b09dbb344"
+vm_name = "alpine-virt-3.19.1-x86_64"
+guest_os_type_virtualbox = "Linux26_64"
+guest_os_type_vmware = "other5xlinux-64"
