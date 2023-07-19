@@ -56,9 +56,10 @@ source "virtualbox-iso" "alpine" {
   headless             = false
   iso_checksum         = "${var.iso_checksum}"
   iso_url              = "${var.iso_url}"
-  keep_registered      = true
+# keep_registered      = true
+  output_directory     = "output-${var.vm_name}"
   shutdown_command     = "/sbin/poweroff"
-  skip_export          = true
+# skip_export          = true
   ssh_password         = "${var.root_password}"
   ssh_timeout          = "3m"
   ssh_username         = "root"
@@ -74,6 +75,7 @@ source "virtualbox-iso" "alpine" {
 	["modifyvm", "{{ .Name }}", "--nic1", "nat"],
 	["modifyvm", "{{ .Name }}", "--nictype1", "virtio"],
 	["modifyvm", "{{ .Name }}", "--cableconnected1", "on"],
+        ["modifyvm", "{{ .Name }}", "--nat-localhostreachable1", "on"],
 	["modifyvm", "{{ .Name }}", "--audio-enabled", "off"],
 	["modifyvm", "{{ .Name }}", "--audio-in", "off"],
 	["modifyvm", "{{ .Name }}", "--audio-out", "off"],
@@ -117,6 +119,7 @@ source "virtualbox-iso" "alpine" {
 	echo 'PermitRootLogin yes' >> /mnt/etc/ssh/sshd_config<enter><wait>
 	cat /mnt/etc/apk/repositories<enter><wait>
 	umount /mnt<enter><wait1>
+	# /etc/init.d/sshd restart<enter><wait1>
 	reboot<enter><wait1>
 	EOF
 	]
@@ -127,7 +130,6 @@ build {
     "source.virtualbox-iso.alpine"
   ]
   provisioner "shell" {
-    pause_before = "20s"
     inline = [
       "sed '/PermitRootLogin yes/d' -i /etc/ssh/sshd_config",
       "echo 'vagrant:${var.vagrant_password}' | chpasswd",
@@ -145,6 +147,18 @@ build {
     ]
   }
   provisioner "shell" {
-    scripts = ["x-provision.sh", "x-vmdiskclean.sh"]
+    scripts = [
+      "x-provision.sh",
+      "x-vmdiskclean.sh"
+    ]
+  }
+  post-processor "shell-local" {
+    inline = [
+      "VBoxManage import output-${var.vm_name}/${var.vm_name}.ova",
+#     "VBoxManage storageattach ${var.vm_name} --storagectl=\"IDE Controller\" --port=1 --device=0 --type=dvddrive --medium=none",
+      "echo execute 'vagrant package'command to making ${var.vm_name}.box",
+      "vagrant package --base ${var.vm_name} --output output-${var.vm_name}/${var.vm_name}.box",
+      "VBoxManage unregistervm ${var.vm_name} --delete-all"
+    ]
   }
 }
