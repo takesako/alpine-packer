@@ -119,7 +119,6 @@ source "virtualbox-iso" "alpine" {
 	echo 'PermitRootLogin yes' >> /mnt/etc/ssh/sshd_config<enter><wait>
 	cat /mnt/etc/apk/repositories<enter><wait>
 	umount /mnt<enter><wait1>
-	# /etc/init.d/sshd restart<enter><wait1>
 	reboot<enter><wait1>
 	EOF
 	]
@@ -131,23 +130,14 @@ build {
   ]
   provisioner "shell" {
     inline = [
-      "sed '/PermitRootLogin yes/d' -i /etc/ssh/sshd_config",
       "echo 'vagrant:${var.vagrant_password}' | chpasswd",
-      "sed -r 's;#(.*[0-9]/community);\\1;g' -i /etc/apk/repositories",
-      "sed -r 's;(.*/edge/main);#\\1;g' -i /etc/apk/repositories",
-      "apk update"
-    ]
-  }
-  provisioner "shell" {
-    inline = [
-      "apk add virtualbox-guest-additions",
-      "rc-update add virtualbox-guest-additions",
-      "rc-update add local",
-      "addgroup vagrant vboxsf"
+      "sed '/PermitRootLogin yes/d' -i /etc/ssh/sshd_config"
     ]
   }
   provisioner "shell" {
     scripts = [
+      "x-apk-update.sh",
+      "x-only-virtualbox.sh",
       "x-provision.sh",
       "x-vmdiskclean.sh"
     ]
