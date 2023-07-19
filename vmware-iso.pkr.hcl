@@ -57,6 +57,7 @@ source "vmware-iso" "alpine" {
   iso_checksum         = "${var.iso_checksum}"
   iso_url              = "${var.iso_url}"
   keep_registered      = true
+  output_directory     = "output-${var.vm_name}"
   shutdown_command     = "/sbin/poweroff"
 # skip_export          = true
   ssh_password         = "${var.root_password}"
@@ -126,25 +127,40 @@ source "vmware-iso" "alpine" {
 
 build {
   sources = [
-    "source.vmware-iso.alpine" # shutdown, dissconnect cdrom, start from GUI
+    "source.vmware-iso.alpine"
   ]
-  provisioner "shell" {
-    pause_before = "20s"
+/*
+  // for M1/M2 Mac, shutdown, dissconnect cdrom, start from GUI
+  provisioner "shell-local" {
     inline = [
-      "sed '/PermitRootLogin yes/d' -i /etc/ssh/sshd_config",
+      "echo 'sata0:0.startConnected = \"FALSE\"' >> output-${var.vm_name}/${var.vm_name}.vmx",
+      "vmrun reset output-${var.vm_name}/${var.vm_name}.vmx hard",
+    ]
+  }
+*/
+  provisioner "shell" {
+    inline = [
       "echo 'vagrant:${var.vagrant_password}' | chpasswd",
-      "sed -r 's;#(.*[0-9]/community);\\1;g' -i /etc/apk/repositories",
-      "sed -r 's;(.*/edge/main);#\\1;g' -i /etc/apk/repositories",
-      "apk update"
+      "sed '/PermitRootLogin yes/d' -i /etc/ssh/sshd_config"
     ]
   }
   provisioner "shell" {
+    scripts = [
+      "x-apk-update.sh",
+      "x-only-vmware.sh",
+      "x-provision.sh",
+      "x-vmdiskclean.sh"
+    ]
+  }
+  provisioner "shell-local" {
     inline = [
-      "apk add open-vm-tools-hgfs",
-      "rc-update add open-vm-tools"
+      "cd output-${var.vm_name}",
+      "echo 'sata0:0.startConnected = \"FALSE\"' >> ${var.vm_name}.vmx",
+      "# vmware-iso.alpine: Detaching ISO from CD-ROM device sata0:0...",
+      "# vmware-iso.alpine: Disabling VNC server...",
+      "rm -f *.plist *.scoreboard vmware.log",
+      "echo '{\"provider\": \"vmware_fusion\"}' > metadata.json",
+      "tar cvfz ../${var.vm_name}.box *.nvram *.vmsd *.vmx *.vmxf *.vmdk *.json"
     ]
-  }
-  provisioner "shell" {
-    scripts = ["x-provision.sh", "x-vmdiskclean.sh"]
   }
 }
