@@ -120,7 +120,8 @@ source "vmware-iso" "alpine" {
 	mount ${var.msys_dev} /mnt<enter><wait>
 	echo 'PermitRootLogin yes' >> /mnt/etc/ssh/sshd_config<enter><wait>
 	umount /mnt<enter><wait1>
-	reboot<enter><wait1>
+	echo 'PermitRootLogin yes' >> /etc/ssh/sshd_config<enter><wait>
+	/etc/init.d/sshd restart<enter><wait1>
 	EOF
 	]
 }
@@ -129,16 +130,17 @@ build {
   sources = [
     "source.vmware-iso.alpine"
   ]
-/*
   // for M1/M2 Mac, shutdown, dissconnect cdrom, start from GUI
   provisioner "shell-local" {
     inline = [
+      "vmrun stop output-${var.vm_name}/${var.vm_name}.vmx hard",
+      "sleep 5",
       "echo 'sata0:0.startConnected = \"FALSE\"' >> output-${var.vm_name}/${var.vm_name}.vmx",
-      "vmrun reset output-${var.vm_name}/${var.vm_name}.vmx hard",
+      "vmrun start output-${var.vm_name}/${var.vm_name}.vmx",
     ]
   }
-*/
   provisioner "shell" {
+    pause_before = "20s"
     inline = [
       "echo 'vagrant:${var.vagrant_password}' | chpasswd",
       "sed '/PermitRootLogin yes/d' -i /etc/ssh/sshd_config"
