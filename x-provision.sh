@@ -1,5 +1,9 @@
 #!/bin/sh -xe
 
+# keymap
+setup-keymap jp jp
+setup-keymap us us
+
 # apk login boot
 echo "Welcome to Alpine Linux!" > /etc/motd
 if test -e /boot/extlinux.conf; then
@@ -7,9 +11,8 @@ if test -e /boot/extlinux.conf; then
   sed -i -e 's/PROMPT 0/PROMPT 1/' /boot/extlinux.conf
 fi
 
-# keymap
-setup-keymap jp jp
-setup-keymap us us
+# for Arch Linux ssh client
+echo 'KbdInteractiveAuthentication no' >> /etc/ssh/sshd_config
 
 # inittab
 sed -r "s;^(ttyS0:.*);#\1;g" -i /etc/inittab
