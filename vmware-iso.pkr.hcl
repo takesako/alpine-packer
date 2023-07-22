@@ -83,7 +83,7 @@ source "vmware-iso" "alpine" {
 	"ehci.present" = "TRUE"
 	"usb_xhci.present" = "TRUE"
 	"usb.vbluetooth.startconnected" = "TRUE"
-	"ethernet0.virtualdev" = "e1000e"
+	"ethernet0.virtualdev" = "vmxnet3"
 	"scsi0.present" = "FALSE"
 	"nvme0.present" = "TRUE"
 	"nvme0:0.filename" = "disk.vmdk"
