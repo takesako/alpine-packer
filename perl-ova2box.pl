@@ -24,7 +24,8 @@ foreach my $file ($tar->list_files()) {
   print STDERR "$file...\n";
   if ($file =~ /\.ovf$/) {
     my $ovf = $tar->get_content($file);
-    $tar->replace_content($file, trim_ovf($ovf));
+    $tar->remove($file);
+    $tar->add_data('box.ovf', trim_ovf($ovf));
   }
 }
 $tar->add_data('metadata.json', '{"provider": "virtualbox"}');
