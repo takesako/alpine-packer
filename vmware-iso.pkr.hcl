@@ -59,7 +59,7 @@ source "vmware-iso" "alpine" {
   keep_registered      = true
   output_directory     = "output-${var.vm_name}"
   shutdown_command     = "/sbin/poweroff"
-  skip_compaction      = true
+  skip_compaction      = false
 # skip_export          = true
   ssh_password         = "${var.root_password}"
   ssh_timeout          = "3m"
@@ -89,12 +89,13 @@ source "vmware-iso" "alpine" {
 	"nvme0:0.filename" = "disk.vmdk"
 	"nvme0:0.present" = "TRUE"
 	"floppy0.present" = "FALSE"
+	"cleanshutdown" = "TRUE"
+	"softpoweroff" = "TRUE"
   }
   vmx_data_post        = {
   }
   vmx_remove_ethernet_interfaces = true
-  pause_before_connecting = "15s"
-  boot_key_interval    = "15ms"
+  boot_key_interval    = "13ms"
   boot_wait            = "20s"
   boot_command         = [<<EOF
 	root<enter><wait>
@@ -141,8 +142,8 @@ build {
   provisioner "shell-local" {
     inline = [
       "vmrun stop output-${var.vm_name}/${var.vm_name}.vmx hard",
-      "perl -e sleep(5)",
-      "perl -e \"print qq(sata0:0.startConnected = \x22FALSE\x22)\" >> output-${var.vm_name}/${var.vm_name}.vmx",
+      "perl -e \"sleep(5)\"",
+      "perl -e \"print'sata0:0.startConnected=0'\" >> output-${var.vm_name}/${var.vm_name}.vmx",
       "vmrun start output-${var.vm_name}/${var.vm_name}.vmx",
     ]
   }
@@ -161,8 +162,14 @@ build {
       "x-vmdiskclean.sh"
     ]
   }
+  provisioner "shell" {
+    inline = [
+      "/sbin/poweroff"
+    ]
+  }
   provisioner "shell-local" {
     inline = [
+      "perl -e \"sleep(15)\"",
       "perl perl-vmx2box.pl output-${var.vm_name} output-${var.vm_name}.box"
     ]
   }
