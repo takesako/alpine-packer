@@ -75,7 +75,7 @@ source "virtualbox-iso" "alpine" {
 	["modifyvm", "{{ .Name }}", "--nic1", "nat"],
 	["modifyvm", "{{ .Name }}", "--nictype1", "virtio"],
 	["modifyvm", "{{ .Name }}", "--cableconnected1", "on"],
-        ["modifyvm", "{{ .Name }}", "--nat-localhostreachable1", "on"],
+	["modifyvm", "{{ .Name }}", "--nat-localhostreachable1", "on"],
 	["modifyvm", "{{ .Name }}", "--audio-enabled", "off"],
 	["modifyvm", "{{ .Name }}", "--audio-in", "off"],
 	["modifyvm", "{{ .Name }}", "--audio-out", "off"],
@@ -88,7 +88,7 @@ source "virtualbox-iso" "alpine" {
 # boot_key_interval    = "15ms"
   boot_wait            = "20s"
   boot_command         = [<<EOF
-	root<enter><wait>
+	root<enter><wait1>
 	date -u -s ${formatdate("YYYYMMDDhhmm.ss", timestamp())}<enter><wait>
 	hwclock -u -w<enter><wait>
 	cat<<EOA>answers<enter>
@@ -144,11 +144,8 @@ build {
   }
   post-processor "shell-local" {
     inline = [
-      "VBoxManage import output-${var.vm_name}/${var.vm_name}.ova",
-#     "VBoxManage storageattach ${var.vm_name} --storagectl=\"IDE Controller\" --port=1 --device=0 --type=dvddrive --medium=none",
-      "echo execute 'vagrant package'command to making ${var.vm_name}.box",
-      "vagrant package --base ${var.vm_name} --output output-${var.vm_name}/${var.vm_name}.box",
-      "VBoxManage unregistervm ${var.vm_name} --delete-all"
+      "echo convert ${var.vm_name}.ova to ${var.vm_name}.box...",
+      "perl perl-ova2box.pl output-${var.vm_name}/${var.vm_name}.ova output-${var.vm_name}/${var.vm_name}.box"
     ]
   }
 }
