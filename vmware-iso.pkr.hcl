@@ -68,7 +68,7 @@ source "vmware-iso" "alpine" {
   vmx_data             = {
 	"memsize" = "256"
 	"numvcpus" = "2"
-	"virtualhw.version" = "19"
+	"virtualhw.version" = "20"
 	"bios.bootorder" = "hdd,cdrom"
 	"bios.hddorder" = "nvme0:0"
 	"tools.synctime" = "false"
