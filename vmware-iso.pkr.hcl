@@ -50,7 +50,7 @@ source "vmware-iso" "alpine" {
   cdrom_adapter_type   = "sata"
   disk_size            = "8192"
   disk_adapter_type    = "nvme"
-# format               = "ova"
+  format               = "vmx"
 # guest_additions_mode = "disable"
   guest_os_type        = "${var.guest_os_type_vmware}"
   headless             = false
@@ -59,6 +59,7 @@ source "vmware-iso" "alpine" {
   keep_registered      = true
   output_directory     = "output-${var.vm_name}"
   shutdown_command     = "/sbin/poweroff"
+  skip_compaction      = true
 # skip_export          = true
   ssh_password         = "${var.root_password}"
   ssh_timeout          = "3m"
@@ -76,6 +77,8 @@ source "vmware-iso" "alpine" {
 	"time.synchronize.resume.disk" = "FALSE"
 	"time.synchronize.shrink" = "FALSE"
 	"time.synchronize.tools.startup" = "FALSE"
+	"time.synchronize.tools.enable" = "FALSE"
+	"time.synchronize.resume.host" = "FALSE"
 	"usb.present" = "TRUE"
 	"ehci.present" = "TRUE"
 	"usb_xhci.present" = "TRUE"
@@ -85,8 +88,12 @@ source "vmware-iso" "alpine" {
 	"nvme0.present" = "TRUE"
 	"nvme0:0.filename" = "disk.vmdk"
 	"nvme0:0.present" = "TRUE"
-	"floppy0.present" = "TRUE"
+	"floppy0.present" = "FALSE"
   }
+  vmx_data_post        = {
+  }
+  vmx_remove_ethernet_interfaces = true
+  pause_before_connecting = "15s"
   boot_key_interval    = "15ms"
   boot_wait            = "20s"
   boot_command         = [<<EOF
@@ -130,12 +137,12 @@ build {
   sources = [
     "source.vmware-iso.alpine"
   ]
-  // for M1/M2 Mac, shutdown, dissconnect cdrom, start from GUI
+  # for M1/M2 Mac VMware Fusion, shutdown vm, dissconnect cdrom, start vm
   provisioner "shell-local" {
     inline = [
       "vmrun stop output-${var.vm_name}/${var.vm_name}.vmx hard",
-      "sleep 5",
-      "echo 'sata0:0.startConnected = \"FALSE\"' >> output-${var.vm_name}/${var.vm_name}.vmx",
+      "perl -e sleep(5)",
+      "perl -e \"print qq(sata0:0.startConnected = \x22FALSE\x22)\" >> output-${var.vm_name}/${var.vm_name}.vmx",
       "vmrun start output-${var.vm_name}/${var.vm_name}.vmx",
     ]
   }
@@ -156,13 +163,7 @@ build {
   }
   provisioner "shell-local" {
     inline = [
-      "cd output-${var.vm_name}",
-      "echo 'sata0:0.startConnected = \"FALSE\"' >> ${var.vm_name}.vmx",
-      "# vmware-iso.alpine: Detaching ISO from CD-ROM device sata0:0...",
-      "# vmware-iso.alpine: Disabling VNC server...",
-      "rm -f *.plist *.scoreboard vmware.log",
-      "echo '{\"provider\": \"vmware_fusion\"}' > metadata.json",
-      "tar cvfz ../${var.vm_name}.box *.nvram *.vmsd *.vmx *.vmxf *.vmdk *.json"
+      "perl perl-vmx2box.pl output-${var.vm_name} output-${var.vm_name}.box"
     ]
   }
 }
