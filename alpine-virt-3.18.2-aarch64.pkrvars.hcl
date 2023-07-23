@@ -1,0 +1,5 @@
+iso_url = "https://dl-cdn.alpinelinux.org/alpine/v3.18/releases/aarch64/alpine-virt-3.18.2-aarch64.iso"
+iso_checksum = "sha256:f5cf0f3cd9e825eb816f4c35fe9e99abd262b5c83f3f621cb50b31628449530c"
+vm_name = "alpine-virt-3.18.2-aarch64"
+guest_os_type_virtualbox = "not supported"
+guest_os_type_vmware = "arm-other5xlinux-64"
