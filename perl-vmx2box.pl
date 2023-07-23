@@ -22,6 +22,9 @@ sub trim_vmx {
   $vmx =~ s/^(\Qusb.present\E)\s*=.*$/$1 = "FALSE"/gmi;
   $vmx =~ s/^(\Qehci.present\E)\s*=.*$/$1 = "FALSE"/gmi;
   $vmx =~ s/^(\Qusb_xhci.present\E)\s*=.*$/$1 = "FALSE"/gmi;
+  $vmx =~ s/^usb:[0-9]+\.*$//gmi;
+  $vmx =~ s/^ehci:[0-9]+\.*$//gmi;
+  $vmx =~ s/^usb_xhci:[0-9]+\.*$//gmi;
   $vmx =~ s/^(\Qusb.vbluetooth.startconnected\E)\s*=.*$/$1 = "FALSE"/gmi;
   $vmx =~ s/\n\n+/\n/sg;
   $vmx;
