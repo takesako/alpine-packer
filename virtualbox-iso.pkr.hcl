@@ -81,9 +81,9 @@ source "virtualbox-iso" "alpine" {
 	["modifyvm", "{{ .Name }}", "--audio-out", "off"],
 	["modifyvm", "{{ .Name }}", "--audio-controller", "ac97"],
 	["modifyvm", "{{ .Name }}", "--vrde", "off"],
-	["modifyvm", "{{ .Name }}", "--usbohci", "on"],
-	["modifyvm", "{{ .Name }}", "--usbehci", "on"],
-	["modifyvm", "{{ .Name }}", "--usbxhci", "on"]
+	["modifyvm", "{{ .Name }}", "--usbohci", "off"],
+	["modifyvm", "{{ .Name }}", "--usbehci", "off"],
+	["modifyvm", "{{ .Name }}", "--usbxhci", "off"]
   ]
 # boot_key_interval    = "15ms"
   boot_wait            = "20s"
