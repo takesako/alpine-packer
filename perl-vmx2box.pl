@@ -12,7 +12,18 @@ my $file;
 
 sub trim_vmx {
   my $vmx = shift;
-  $vmx =~ s#RemoteDisplay\.vnc\..*?\n##sg;
+  $vmx =~ s/^(\Qbios.bootorder\E)\s*=.*$/$1 = "cdrom,hdd"/gmi;
+  $vmx =~ s/^(\Qsata0:0.startconnected\E)\s*=.*$/$1 = "FALSE"/gmi;
+  $vmx =~ s/^(\Qsata0:0.filename\E)\s*=.*$/$1 = "auto detect"/gmi;
+  $vmx =~ s/^(\Qsata0:0.devicetype\E)\s*=.*$/$1 = "cdrom-raw"/gmi;
+  $vmx =~ s/^(\Qremotedisplay.vnc.enabled\E)\s*=.*$/$1 = "FALSE"/gmi;
+  $vmx =~ s/^(\QRemoteDisplay.vnc.\E).*$//gmi;
+  $vmx =~ s/^(\Qethernet0.generatedAddress\E).*$//gmi;
+  $vmx =~ s/^(\Qusb.present\E)\s*=.*$/$1 = "FALSE"/gmi;
+  $vmx =~ s/^(\Qehci.present\E)\s*=.*$/$1 = "FALSE"/gmi;
+  $vmx =~ s/^(\Qusb_xhci.present\E)\s*=.*$/$1 = "FALSE"/gmi;
+  $vmx =~ s/^(\Qusb.vbluetooth.startconnected\E)\s*=.*$/$1 = "FALSE"/gmi;
+  $vmx =~ s/\n\n+/\n/sg;
   $vmx;
 }
 
