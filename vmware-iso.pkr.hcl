@@ -71,7 +71,7 @@ source "vmware-iso" "alpine" {
 	"virtualhw.version" = "20"
 	"bios.bootorder" = "hdd,cdrom"
 	"bios.hddorder" = "nvme0:0"
-	"tools.synctime" = "false"
+	"tools.synctime" = "FALSE"
 	"time.synchronize.continue" = "FALSE"
 	"time.synchronize.restore" = "FALSE"
 	"time.synchronize.resume.disk" = "FALSE"
