@@ -1,5 +1,0 @@
-iso_url = "https://dl-cdn.alpinelinux.org/alpine/v3.18/releases/x86_64/alpine-standard-3.18.2-x86_64.iso"
-iso_checksum = "sha256:513dfc3c0c516b803095cd829df72cea956757316247584f0f2ddde7e5b0262f"
-vm_name = "alpine-3.18.2-x86_64"
-guest_os_type_virtualbox = "Linux26_64"
-guest_os_type_vmware = "other5xlinux-64"
