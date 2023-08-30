@@ -25,12 +25,12 @@ variable "guest_os_type_vmware" {
 
 variable "install_dev" {
   type    = string
-  default = "/dev/nvme0n1"
+  default = "/dev/sda"
 }
 
 variable "msys_dev" {
   type    = string
-  default = "/dev/nvme0n1p3"
+  default = "/dev/sda3"
 }
 
 variable "root_password" {
@@ -93,7 +93,7 @@ source "vmware-iso" "alpine" {
   }
   vmx_remove_ethernet_interfaces = true
   boot_key_interval    = "13ms"
-  boot_wait            = "40s"
+  boot_wait            = "20s"
   boot_command         = [<<EOF
 	root<enter><wait>
 	date -u -s ${formatdate("YYYYMMDDhhmm.ss", timestamp())}<enter><wait>
