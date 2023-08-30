@@ -11,7 +11,7 @@ packer build scripts for making Alpine Linux boxes (x86_64/aarch64) by virtualbo
 
 ## for Apple Silicon M1/M2 Mac (vmware_fusion provider)
 
-```packer build -var-file=alpine-virt-3.18.3-aarch64.pkrvars.hcl vmware-iso.pkr.hcl```
+```packer build -var-file=alpine-virt-3.18.3-aarch64.pkrvars.hcl vmware-iso-aarch64.pkr.hcl```
 
 - https://app.vagrantup.com/takesako/boxes/alpine-virt-3.18-aarch64
 

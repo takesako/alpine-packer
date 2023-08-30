@@ -47,9 +47,9 @@ variable "vagrant_password" {
 source "vmware-iso" "alpine" {
   vm_name              = "${var.vm_name}"
   communicator         = "ssh"
-  cdrom_adapter_type   = "ide"
+  cdrom_adapter_type   = "sata"
   disk_size            = "8192"
-  disk_adapter_type    = "scsi"
+  disk_adapter_type    = "nvme"
   format               = "vmx"
 # guest_additions_mode = "disable"
   guest_os_type        = "${var.guest_os_type_vmware}"
@@ -68,9 +68,9 @@ source "vmware-iso" "alpine" {
   vmx_data             = {
 	"memsize" = "256"
 	"numvcpus" = "2"
-	"virtualhw.version" = "8"
+	"virtualhw.version" = "20"
 	"bios.bootorder" = "hdd,cdrom"
-	"bios.hddorder" = "scsi0:0"
+	"bios.hddorder" = "nvme0:0"
 	"tools.synctime" = "FALSE"
 	"time.synchronize.continue" = "FALSE"
 	"time.synchronize.restore" = "FALSE"
@@ -84,7 +84,10 @@ source "vmware-iso" "alpine" {
 	"usb_xhci.present" = "TRUE"
 	"usb.vbluetooth.startconnected" = "TRUE"
 	"ethernet0.virtualdev" = "vmxnet3"
-	"scsi0.present" = "TRUE"
+	"scsi0.present" = "FALSE"
+	"nvme0.present" = "TRUE"
+	"nvme0:0.filename" = "disk.vmdk"
+	"nvme0:0.present" = "TRUE"
 	"floppy0.present" = "FALSE"
 	"cleanshutdown" = "TRUE"
 	"softpoweroff" = "TRUE"
@@ -93,7 +96,7 @@ source "vmware-iso" "alpine" {
   }
   vmx_remove_ethernet_interfaces = true
   boot_key_interval    = "13ms"
-  boot_wait            = "40s"
+  boot_wait            = "20s"
   boot_command         = [<<EOF
 	root<enter><wait>
 	date -u -s ${formatdate("YYYYMMDDhhmm.ss", timestamp())}<enter><wait>
