@@ -1,3 +1,6 @@
 build.hwm
 build.pwd
 build.pwi
+packer_cache/
+output-*/
+*.box
