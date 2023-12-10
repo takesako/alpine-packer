@@ -1,0 +1,5 @@
+iso_url = "https://dl-cdn.alpinelinux.org/alpine/v3.19/releases/x86_64/alpine-standard-3.19.0-x86_64.iso"
+iso_checksum = "sha256:4cf7cd3bad64122a8a2423e78369a486a02334d4d88645aab9d08120bb76b0f9"
+vm_name = "alpine-standard-3.19.0-x86_64"
+guest_os_type_virtualbox = "Linux26_64"
+guest_os_type_vmware = "other5xlinux-64"

@@ -1,6 +1,6 @@
 variable "iso_url" {
   type    = string
-  default = "https://dl-cdn.alpinelinux.org/alpine/v3.18/releases/x86/alpine-standard-3.18.2-aarch64.iso"
+  default = "https://dl-cdn.alpinelinux.org/alpine/v3.18/releases/aarch64/alpine-standard-3.18.2-aarch64.iso"
 }
 
 variable "iso_checksum" {
