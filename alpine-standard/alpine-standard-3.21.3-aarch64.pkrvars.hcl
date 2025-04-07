@@ -1,0 +1,5 @@
+iso_url = "https://dl-cdn.alpinelinux.org/alpine/v3.21/releases/aarch64/alpine-standard-3.21.3-aarch64.iso"
+iso_checksum = "sha256:ff4f3dce9b76f5d67abe79d4a086f077ab7377bf12133af028111f780f1a5051"
+vm_name = "alpine-standard-3.21.3-aarch64"
+guest_os_type_virtualbox = "not supported"
+guest_os_type_vmware = "arm-other5xlinux-64"
