@@ -4,11 +4,21 @@
 setup-keymap jp jp
 setup-keymap us us
 
-# apk login boot
+# apk login message
 echo "Welcome to Alpine Linux!" > /etc/motd
+# speed boot
 if test -e /boot/extlinux.conf; then
   sed -i -e 's/TIMEOUT [0-9]\+/TIMEOUT 1/' /boot/extlinux.conf
   sed -i -e 's/PROMPT 0/PROMPT 1/' /boot/extlinux.conf
+fi
+if test -e /etc/default/grub; then
+  cat<<EOF>/etc/default/grub
+GRUB_TIMEOUT=0
+GRUB_DISABLE_SUBMENU=y
+GRUB_DISABLE_RECOVERY=true
+GRUB_CMDLINE_LINUX_DEFAULT="quiet rootfstype=ext4"
+EOF
+  grub-mkconfig -o /boot/grub/grub.cfg
 fi
 
 # for Arch Linux ssh client
@@ -54,8 +64,9 @@ addgroup vagrant wheel
 # random
 apk add --no-cache haveged
 rc-update add haveged
-##apk add --no-cache rng-tools
-##rc-update add rngd
+apk add --no-cache rng-tools
+rc-update add rngd default
+rc-service rngd start
 ##cat /proc/sys/kernel/random/entropy_avail
 
 # mount
