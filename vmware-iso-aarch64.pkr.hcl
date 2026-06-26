@@ -66,32 +66,37 @@ source "vmware-iso" "alpine" {
   ssh_timeout          = "3m"
   ssh_username         = "root"
   usb                  = true
-  vmx_data             = {
-	"memsize" = "256"
-	"numvcpus" = "2"
-	"virtualhw.version" = "20"
-	"bios.bootorder" = "hdd,cdrom"
-	"bios.hddorder" = "nvme0:0"
-	"tools.synctime" = "FALSE"
-	"time.synchronize.continue" = "FALSE"
-	"time.synchronize.restore" = "FALSE"
-	"time.synchronize.resume.disk" = "FALSE"
-	"time.synchronize.shrink" = "FALSE"
-	"time.synchronize.tools.startup" = "FALSE"
-	"time.synchronize.tools.enable" = "FALSE"
-	"time.synchronize.resume.host" = "FALSE"
-	"usb.present" = "TRUE"
-	"ehci.present" = "TRUE"
-	"usb_xhci.present" = "TRUE"
-	"usb.vbluetooth.startconnected" = "TRUE"
-	"ethernet0.virtualdev" = "vmxnet3"
-	"scsi0.present" = "FALSE"
-	"nvme0.present" = "TRUE"
-	"nvme0:0.filename" = "disk.vmdk"
-	"nvme0:0.present" = "TRUE"
-	"floppy0.present" = "FALSE"
-	"cleanshutdown" = "TRUE"
-	"softpoweroff" = "TRUE"
+  vmx_data = {
+    "memsize" = "256"
+    "numvcpus" = "2"
+    "virtualhw.version" = "20"
+    "bios.bootorder" = "hdd,cdrom"
+    "bios.hddorder" = "nvme0:0"
+    "tools.synctime" = "FALSE"
+    "time.synchronize.continue" = "FALSE"
+    "time.synchronize.restore" = "FALSE"
+    "time.synchronize.resume.disk" = "FALSE"
+    "time.synchronize.shrink" = "FALSE"
+    "time.synchronize.tools.startup" = "FALSE"
+    "time.synchronize.tools.enable" = "FALSE"
+    "time.synchronize.resume.host" = "FALSE"
+    "usb.present" = "TRUE"
+    "ehci.present" = "TRUE"
+    "xhci.present" = "TRUE"
+    "usb_xhci.present" = "TRUE"
+    "keyboard.vusb.enable" = "TRUE"
+    "mouse.vusb.enable" = "TRUE"
+    "usb.generic.allowHID" = "TRUE"
+    "usb.vbluetooth.startconnected" = "TRUE"
+    "ethernet0.virtualdev" = "vmxnet3"
+    "ethernet0.pcislotnumber" = "160"
+    "scsi0.present" = "FALSE"
+    "nvme0.present" = "TRUE"
+    "nvme0:0.filename" = "disk.vmdk"
+    "nvme0:0.present" = "TRUE"
+    "floppy0.present" = "FALSE"
+    "cleanshutdown" = "TRUE"
+    "softpoweroff" = "TRUE"
   }
   vmx_data_post        = {
   }
@@ -113,7 +118,7 @@ source "vmware-iso" "alpine" {
 	iface eth0 inet dhcp<enter>
 	    hostname alpine<enter>
 	"<enter>
-	DNSOPTS="-d example.com 8.8.8.8"<enter>
+	DNSOPTS="-d example.com 1.1.1.1"<enter>
 	TIMEZONEOPTS=UTC<enter>
 	PROXYOPTS=none<enter>
 	APKREPOSOPTS=-1<enter>
