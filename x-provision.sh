@@ -35,23 +35,26 @@ chmod 600 .ssh/authorized_keys
 chown vagrant:vagrant .ssh .ssh/*
 
 # bash
-apk add bash
+apk add --no-cache bash
+
+# nano
+apk add --no-cache nano
 
 # sudo
-apk add sudo
+apk add --no-cache sudo
 echo "vagrant ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/vagrant
 chmod 400 /etc/sudoers.d/vagrant
 
 # doas
-apk add doas
+apk add --no-cache doas
 echo 'permit nopass :wheel' > /etc/doas.d/wheel.conf
 chmod 400 /etc/doas.d/wheel.conf
 addgroup vagrant wheel
 
 # random
-apk add haveged
+apk add --no-cache haveged
 rc-update add haveged
-##apk add rng-tools
+##apk add --no-cache rng-tools
 ##rc-update add rngd
 ##cat /proc/sys/kernel/random/entropy_avail
 
@@ -70,4 +73,5 @@ fi
 EOF
 chmod 755 .profile
 chown vagrant:vagrant .profile
-
+ln -s /vagrant vagrant
+chown -h vagrant:vagrant vagrant
