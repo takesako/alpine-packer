@@ -54,8 +54,15 @@ for my $prefix (@$alpine_prefix) {
 
     my $html = $res->content;
 
-    my @sha256_files =
-      $html =~ /href="($prefix-\d+\.\d+\.\d+-$arch\.iso\.sha256)"/g;
+    my @sha256_files = $html =~ /href="($prefix-\d+\.\d+\.\d+-$arch\.iso\.sha256)"/g;
+
+    # Use only the latest patch version
+    @sha256_files = sort {
+      my ($a_patch) = $a =~ /-\d+\.\d+\.(\d+)-/;
+      my ($b_patch) = $b =~ /-\d+\.\d+\.(\d+)-/;
+      $b_patch <=> $a_patch;
+    } @sha256_files;
+    @sha256_files = $sha256_files[0] ? ($sha256_files[0]) : ();
 
     for my $sha256_file (@sha256_files) {
       my $sha256_url = $base_url . $sha256_file;
