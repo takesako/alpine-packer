@@ -13,7 +13,7 @@ packer build scripts for making Alpine Linux boxes (x86_64/aarch64) by virtualbo
 
 ```packer build -var-file=alpine-virt/alpine-virt-3.19.9-x86_64.pkrvars.hcl virtualbox-iso.pkr.hcl```
 
-## bulild for Intel x86_64 (vmware provider)
+## bulild for Intel x86_64 (vmware_desktop provider)
 
 ```packer plugins install github.com/vmware/vmware```
 
@@ -21,7 +21,9 @@ packer build scripts for making Alpine Linux boxes (x86_64/aarch64) by virtualbo
 
 ```packer build -var-file=alpine-virt/alpine-virt-3.19.9-x86_64.pkrvars.hcl vmware-iso.pkr.hcl```
 
-## bulild for Apple Silicon M1/M2 Mac (vmware_fusion provider)
+## bulild for Apple Silicon M1/M2 Mac (vmware_desktop provider)
+
+```packer plugins install github.com/vmware/vmware```
 
 ```packer build -var-file=alpine-standard/alpine-standard-3.19.9-aarch64.pkrvars.hcl vmware-iso-aarch64.pkr.hcl```
 
