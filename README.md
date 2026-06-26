@@ -7,6 +7,10 @@ packer build scripts for making Alpine Linux boxes (x86_64/aarch64) by virtualbo
 - https://app.vagrantup.com/takesako/boxes/alpine-standard-v3.19
 - https://app.vagrantup.com/takesako/boxes/alpine-virt-v3.19
 
+## create latest pkrvars.hcl
+
+```perl perl-iso2hcl.pl v3.19```
+
 ## bulild for Intel x86_64 (virtualbox provider)
 
 ```packer plugins install github.com/hashicorp/virtualbox```
