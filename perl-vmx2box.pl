@@ -57,7 +57,7 @@ foreach $file (glob("*")) {
   $tar->chown($file, $owner);
 }
 
-$tar->add_data($file = 'metadata.json', '{"provider": "vmware_fusion"}');
+$tar->add_data($file = 'metadata.json', '{"provider": "vmware_desktop"}');
 $tar->chmod($file, $mode);
 $tar->chown($file, $owner);
 $tar->add_data($file = 'Vagrantfile', '');
