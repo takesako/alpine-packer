@@ -1,26 +1,26 @@
 variable "iso_url" {
   type    = string
-  default = "https://dl-cdn.alpinelinux.org/alpine/v3.18/releases/x86_64/alpine-standard-3.18.3-x86_64.iso"
+  default = "https://dl-cdn.alpinelinux.org/alpine/v3.18/releases/x86/alpine-standard-3.18.2-x86.iso"
 }
 
 variable "iso_checksum" {
   type    = string
-  default = "sha256:badeb7f57634c22dbe947bd692712456f2daecd526c14270355be6ee5e73e83e"
+  default = "sha256:4b5d0762629d520422daeaaac55f7a159caee5e93bcab8860b0386ff51bc0e71"
 }
 
 variable "vm_name" {
   type    = string
-  default = "alpine-3.18.3-x86_64"
+  default = "alpine-3.18.2-x86"
 }
 
 variable "guest_os_type_virtualbox" {
   type    = string
-  default = "not supported"
+  default = "Linux26"
 }
 
 variable "guest_os_type_vmware" {
   type    = string
-  default = "other5xlinux-64"
+  default = "other5xlinux"
 }
 
 variable "install_dev" {
@@ -43,63 +43,52 @@ variable "vagrant_password" {
   default = "vagrant"
 }
 
-# https://developer.hashicorp.com/packer/plugins/builders/vmware/iso
-source "vmware-iso" "alpine" {
+# https://developer.hashicorp.com/packer/plugins/builders/virtualbox/iso
+source "virtualbox-iso" "alpine" {
+  memory               = 256
+  cpus                 = 2
   vm_name              = "${var.vm_name}"
   communicator         = "ssh"
-  cdrom_adapter_type   = "ide"
+# cdrom_adapter_type   = "sata"
   disk_size            = "8192"
-  disk_adapter_type    = "scsi"
-  format               = "vmx"
-  guest_os_type        = "${var.guest_os_type_vmware}"
+# disk_adapter_type    = "nvme"
+  format               = "ova"
+  guest_additions_mode = "disable"
+  guest_os_type        = "${var.guest_os_type_virtualbox}"
   headless             = false
   iso_checksum         = "${var.iso_checksum}"
   iso_url              = "${var.iso_url}"
 # keep_registered      = true
-  network_adapter_type = "vmxnet3"
   output_directory     = "output-${var.vm_name}"
   shutdown_command     = "/sbin/poweroff"
-  skip_compaction      = false
-  skip_export          = true
+# skip_export          = true
   ssh_password         = "${var.root_password}"
   ssh_timeout          = "3m"
   ssh_username         = "root"
   usb                  = true
-  vmx_data             = {
-    "memsize" = "256"
-    "numvcpus" = "2"
-    "virtualhw.version" = "8"
-    "bios.bootorder" = "hdd,cdrom"
-    "bios.hddorder" = "scsi0:0"
-    "tools.synctime" = "FALSE"
-    "time.synchronize.continue" = "FALSE"
-    "time.synchronize.restore" = "FALSE"
-    "time.synchronize.resume.disk" = "FALSE"
-    "time.synchronize.shrink" = "FALSE"
-    "time.synchronize.tools.startup" = "FALSE"
-    "time.synchronize.tools.enable" = "FALSE"
-    "time.synchronize.resume.host" = "FALSE"
-    "usb.present" = "TRUE"
-    "ehci.present" = "TRUE"
-    "usb_xhci.present" = "TRUE"
-    "keyboard.vusb.enable" = "TRUE"
-    "mouse.vusb.enable" = "TRUE"
-    "usb.generic.allowHID" = "TRUE"
-    "usb.vbluetooth.startconnected" = "TRUE"
-    "ethernet0.virtualdev" = "vmxnet3"
-    "scsi0.present" = "TRUE"
-    "floppy0.present" = "FALSE"
-    "cleanshutdown" = "TRUE"
-    "softpoweroff" = "TRUE"
-  }
-  vmx_data_post        = {
-	"ide0:0.startconnected" = "FALSE"
-  }
-  vmx_remove_ethernet_interfaces = true
-  boot_key_interval    = "13ms"
+  vboxmanage           = [
+	["modifyvm", "{{ .Name }}", "--vram", "33"],
+	["modifyvm", "{{ .Name }}", "--ioapic", "on"],
+	["modifyvm", "{{ .Name }}", "--rtcuseutc", "on"],
+	["modifyvm", "{{ .Name }}", "--graphicscontroller", "vmsvga"],
+	["modifyvm", "{{ .Name }}", "--chipset", "ich9"],
+	["modifyvm", "{{ .Name }}", "--nic1", "nat"],
+	["modifyvm", "{{ .Name }}", "--nictype1", "virtio"],
+	["modifyvm", "{{ .Name }}", "--cableconnected1", "on"],
+	["modifyvm", "{{ .Name }}", "--nat-localhostreachable1", "on"],
+	["modifyvm", "{{ .Name }}", "--audio-enabled", "off"],
+	["modifyvm", "{{ .Name }}", "--audio-in", "off"],
+	["modifyvm", "{{ .Name }}", "--audio-out", "off"],
+	["modifyvm", "{{ .Name }}", "--audio-controller", "ac97"],
+	["modifyvm", "{{ .Name }}", "--vrde", "off"],
+	["modifyvm", "{{ .Name }}", "--usbohci", "on"],
+	["modifyvm", "{{ .Name }}", "--usbehci", "on"],
+	["modifyvm", "{{ .Name }}", "--usbxhci", "off"]
+  ]
+# boot_key_interval    = "15ms"
   boot_wait            = "20s"
   boot_command         = [<<EOF
-	root<enter><wait>
+	root<enter><wait1>
 	date -u -s ${formatdate("YYYYMMDDhhmm.ss", timestamp())}<enter><wait>
 	hwclock -u -w<enter><wait>
 	cat<<EOA>answers<enter>
@@ -128,6 +117,7 @@ source "vmware-iso" "alpine" {
 	y<enter><wait20s>
 	mount ${var.msys_dev} /mnt<enter><wait>
 	echo 'PermitRootLogin yes' >> /mnt/etc/ssh/sshd_config<enter><wait>
+	cat /mnt/etc/apk/repositories<enter><wait>
 	umount /mnt<enter><wait1>
 	reboot<enter><wait1>
 	EOF
@@ -136,7 +126,7 @@ source "vmware-iso" "alpine" {
 
 build {
   sources = [
-    "source.vmware-iso.alpine"
+    "source.virtualbox-iso.alpine"
   ]
   provisioner "shell" {
     inline = [
@@ -147,17 +137,15 @@ build {
   provisioner "shell" {
     scripts = [
       "x-apk-update.sh",
-      "x-only-vmware.sh",
+      "x-only-virtualbox.sh",
       "x-provision.sh",
       "x-vmdiskclean.sh"
     ]
   }
   post-processor "shell-local" {
     inline = [
-      "echo convert vmx to ${var.vm_name}.box...",
-      "perl perl-vmx2box.pl output-${var.vm_name} output-${var.vm_name}.box",
-      "rm -f output-${var.vm_name}/*",
-      "rmdir output-${var.vm_name}"
+      "echo convert ${var.vm_name}.ova to ${var.vm_name}.box...",
+      "perl perl-ova2box.pl output-${var.vm_name}/${var.vm_name}.ova output-${var.vm_name}/${var.vm_name}.box"
     ]
   }
 }
