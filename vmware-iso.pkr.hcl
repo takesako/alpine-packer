@@ -45,6 +45,9 @@ variable "vagrant_password" {
 
 # https://developer.hashicorp.com/packer/plugins/builders/vmware/iso
 source "vmware-iso" "alpine" {
+  vnc_bind_address     = "127.0.0.1"
+  vnc_port_min         = 5900
+  vnc_port_max         = 5900
   vm_name              = "${var.vm_name}"
   communicator         = "ssh"
   cdrom_adapter_type   = "ide"
@@ -52,10 +55,11 @@ source "vmware-iso" "alpine" {
   disk_adapter_type    = "scsi"
   format               = "vmx"
   guest_os_type        = "${var.guest_os_type_vmware}"
-  headless             = false
+  headless             = true
   iso_checksum         = "${var.iso_checksum}"
   iso_url              = "${var.iso_url}"
-  keep_registered      = true
+# keep_registered      = true
+  network_adapter_type = "vmxnet3"
   output_directory     = "output-${var.vm_name}"
   shutdown_command     = "/sbin/poweroff"
   skip_compaction      = false
@@ -155,7 +159,7 @@ build {
     inline = [
       "echo convert vmx to ${var.vm_name}.box...",
       "perl perl-vmx2box.pl output-${var.vm_name} output-${var.vm_name}.box",
-      "rm -f output-${var.vm_name}/*",
+      "del /q output-${var.vm_name}/*",
       "rmdir output-${var.vm_name}"
     ]
   }
