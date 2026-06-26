@@ -159,8 +159,7 @@ build {
     inline = [
       "echo convert vmx to ${var.vm_name}.box...",
       "perl perl-vmx2box.pl output-${var.vm_name} output-${var.vm_name}.box",
-      "del /q output-${var.vm_name}/*",
-      "rmdir output-${var.vm_name}"
+      "perl -MFile::Path=remove_tree -e \"remove_tree('output-${var.vm_name}')\""
     ]
   }
 }
