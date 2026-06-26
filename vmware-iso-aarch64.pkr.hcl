@@ -56,7 +56,8 @@ source "vmware-iso" "alpine" {
   headless             = false
   iso_checksum         = "${var.iso_checksum}"
   iso_url              = "${var.iso_url}"
-  keep_registered      = true
+# keep_registered      = true
+  network_adapter_type = "vmxnet3"
   output_directory     = "output-${var.vm_name}"
   shutdown_command     = "/sbin/poweroff"
   skip_compaction      = false
