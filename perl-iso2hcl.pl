@@ -5,6 +5,7 @@ use LWP::Protocol::https;
 use LWP::UserAgent;
 use File::Slurp;
 use File::Path qw(make_path);
+# sudo apt install -y libfile-slurp-perl libwww-perl
 
 $ENV{"PERL_LWP_SSL_VERIFY_HOSTNAME"} = 0;
 
