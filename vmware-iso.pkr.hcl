@@ -59,7 +59,7 @@ source "vmware-iso" "alpine" {
   iso_checksum         = "${var.iso_checksum}"
   iso_url              = "${var.iso_url}"
 # keep_registered      = true
-  network_adapter_type = "vmxnet3"
+  network_adapter_type = "e1000e"
   output_directory     = "output-${var.vm_name}"
   shutdown_command     = "/sbin/poweroff"
   skip_compaction      = false
@@ -87,9 +87,6 @@ source "vmware-iso" "alpine" {
     "usb_xhci.present" = "TRUE"
     "keyboard.vusb.enable" = "TRUE"
     "mouse.vusb.enable" = "TRUE"
-    "usb.generic.allowHID" = "TRUE"
-    "usb.vbluetooth.startconnected" = "TRUE"
-    "ethernet0.virtualdev" = "vmxnet3"
     "scsi0.present" = "TRUE"
     "floppy0.present" = "FALSE"
     "cleanshutdown" = "TRUE"
