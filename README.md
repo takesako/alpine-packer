@@ -9,6 +9,8 @@ packer build scripts for making Alpine Linux boxes (x86_64/aarch64) by virtualbo
 
 ## bulild for Intel x86_64 (virtualbox provider)
 
+```packer plugins install github.com/hashicorp/virtualbox```
+
 ```packer build -var-file=alpine-standard/alpine-standard-3.19.9-x86_64.pkrvars.hcl virtualbox-iso.pkr.hcl```
 
 ```packer build -var-file=alpine-virt/alpine-virt-3.19.9-x86_64.pkrvars.hcl virtualbox-iso.pkr.hcl```
