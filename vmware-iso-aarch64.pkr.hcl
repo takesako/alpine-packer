@@ -82,7 +82,6 @@ source "vmware-iso" "alpine" {
     "time.synchronize.resume.host" = "FALSE"
     "usb.present" = "TRUE"
     "ehci.present" = "TRUE"
-    "xhci.present" = "TRUE"
     "usb_xhci.present" = "TRUE"
     "keyboard.vusb.enable" = "TRUE"
     "mouse.vusb.enable" = "TRUE"
