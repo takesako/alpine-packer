@@ -4,10 +4,10 @@ packer build scripts for making Alpine Linux boxes (x86_64/aarch64) by virtualbo
 
 ## Vagrant Cloud boxes (built by alpine-packer)
 
-- https://app.vagrantup.com/takesako/boxes/alpine-standard-v3.19
-- https://app.vagrantup.com/takesako/boxes/alpine-virt-v3.24
+- https://portal.cloud.hashicorp.com/vagrant/discover/takesako/alpine-virt-v3.24
+- https://app.vagrantup.com/takesako/boxes/alpine-standard-v3.19 (maintenance freeze)
 
-## create latest pkrvars.hcl
+## create latest version pkrvars.hcl
 
 ```perl perl-iso2hcl.pl v3.24```
 
