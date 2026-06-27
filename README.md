@@ -25,7 +25,7 @@ packer build scripts for making Alpine Linux boxes (x86_64/aarch64) by virtualbo
 
 ## bulild for Apple Silicon M1/M2 Mac (vmware_desktop provider)
 
-```packer plugins install github.com/vmware/vmware```cl```
+```packer plugins install github.com/vmware/vmware```
 
 ```packer build -var-file=alpine-virt/alpine-virt-3.24.1-aarch64.pkrvars.hcl vmware-iso-aarch64.pkr.hcl```
 
