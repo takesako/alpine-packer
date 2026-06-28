@@ -8,7 +8,7 @@ use Archive::Tar;
 use IO::Compress::Gzip qw(gzip $GzipError);
 
 my $arch    = shift @ARGV // 'aarch64'; # or 'x86_64'
-my $in_img  = shift @ARGV // 'qcow2.img';
+my $in_img  = shift @ARGV // 'box.img';
 my $out_box = shift @ARGV // 'libvirt.box';
 
 die "too many arguments\nusage: $0 [architecture] [qcow2.img] [libvirt.box]\n" if @ARGV;
