@@ -4,7 +4,8 @@ packer build scripts for making Alpine Linux boxes (x86_64/aarch64) by virtualbo
 
 ## Vagrant Cloud boxes (built by alpine-packer)
 
-- https://portal.cloud.hashicorp.com/vagrant/discover/takesako/alpine-virt-v3.24
+- https://portal.cloud.hashicorp.com/vagrant/discover/takesako/alpine-virt-3.24-aarch64
+- https://portal.cloud.hashicorp.com/vagrant/discover/takesako/alpine-virt-3.24-x86_64
 - https://app.vagrantup.com/takesako/boxes/alpine-standard-v3.19 (maintenance freeze)
 
 ## create latest version pkrvars.hcl
