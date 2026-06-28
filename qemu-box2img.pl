@@ -8,7 +8,7 @@ use Cwd qw(getcwd);
 use Archive::Tar;
 
 my $default_url = 'https://vagrantcloud.com/takesako/boxes/alpine-virt-3.24-aarch64/versions/3.24.1/providers/vmware_desktop/arm64/vagrant.box';
-my $default_img = 'qcow2.img';
+my $default_img = 'box.img';
 
 my $url     = shift @ARGV // $default_url;
 my $out_img = shift @ARGV // $default_img;
